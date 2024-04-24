@@ -31,19 +31,20 @@ passport.deserializeUser((user, done) => {
 
 const CLIENT_URL = process.env.CLIENT_URL;
 
-router.get("/login/success", (req, res) => {
-  console.log("user login ");
-  if (req.user) {
-    res.status(200).json({
-      error: false,
-      message: "Successfully Logged In",
-      user: req.user
-    });
-  } else {
-    res.status(403).json({ error: true, message: "Not Authorized" });
-    console.log(error);
-  }
-});
+// router.get("/login/success", (req, res) => {
+//   console.log("user login ");
+//   if (req.user) {
+//     res.status(200).json({
+//       error: false,
+//       message: "Successfully Logged In",
+//       user: req.user,
+//       isAuthenticated:true
+//     });
+//   } else {
+//     res.status(403).json({ error: true, message: "Not Authorized" });
+//     console.log(error);
+//   }
+// });
 
 router.get("/login/failed", (req, res) => {
   res.status(401).json({
@@ -71,12 +72,12 @@ router.get(
 
 router.get("/check", (req, res) => {
   if (req.user) {
-    console.log(req.user, "user");
     res.status(200).json({ isLoggedIn: true, user: req.user });
   } else {
     res.status(200).json({ isLoggedIn: false });
   }
 });
+
 
 router.get("/logout", (req, res) => {
   req.logout();
