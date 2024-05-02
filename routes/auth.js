@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const passport = require("passport");
 const dotenv = require("dotenv");
+const User=require('../modals/user');
 dotenv.config();
 
 // Passport configuration
@@ -14,9 +15,28 @@ passport.use(
       callbackURL: "/api/auth/google/callback",
       scope: ["profile", "email"]
     },
-    function (accessToken, refreshToken, profile, callback) {
-      console.log(callback, profile);
-      callback(null, profile);
+   async function (accessToken, refreshToken, profile, callback) {
+    // console.log(profile)
+      try {
+        // Find or create user based on Google profile ID
+        let user = await User.findOne({ email:profile.emails[0].value});
+        
+        if (!user) {
+          // If user doesn't exist, create a new one
+          user = new User({
+            googleId: profile.id,
+            displayName: profile.displayName,
+            email:profile.emails[0].value,
+            magazineSubscription: false, // Default value
+          });
+          await user.save();
+        }
+        callback(null, user);
+      } catch (err) {
+        callback(err);
+      }
+      // console.log(callback, profile);
+      // callback(null, profile);
     }
   )
 );
