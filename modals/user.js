@@ -4,7 +4,10 @@ const userSchema = new mongoose.Schema({
     username: String,
     email: String,
     password: String,
-    magazineSubscription: { type: Boolean, default: false }, // Default value is false
+   
+        isSubscribed: { type: Boolean, default: false },
+        startDate: { type: Date, default: null },
+        razorpay_payment_id:{type:String,default:null}
     // Other fields as needed
 });
 
