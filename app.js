@@ -15,6 +15,7 @@ const cors= require("cors")
 const sessionSecret = crypto.randomBytes(64).toString("hex");
 const subscriptionScheduler = require('./routes/subscriptionScheduler');
 const refund=require('./routes/refund')
+const updatePaymentStatus=require('./routes/updatePaymentStatus')
 // Session middleware configuration
 
 app.use(bodyParser.json());
@@ -48,6 +49,7 @@ app.use('/api/payment',payment)
 app.use('/api/magazine_subscribe',magazine_subscribe)
 app.use('/api/check_subscription',check_subscription)
 app.use('/api/refund',refund)
+app.use('/api/updatepaymentstatus',updatePaymentStatus);
 setInterval(subscriptionScheduler,  60 * 1000); // Check once every 24 hours
 // Start server
 const PORT = process.env.PORT || 3000;
