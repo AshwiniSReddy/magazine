@@ -1,6 +1,7 @@
 // subscriptionScheduler.js
 
 const User = require('../modals/user');
+const Payment=require('../modals/payment')
 
 const checkSubscriptionStatus = async () => {
     try {
@@ -14,6 +15,17 @@ const checkSubscriptionStatus = async () => {
             user.isSubscribed = false;
             await user.save();
         });
+        for (const user of usersToUnsubscribe) {
+            const userEmail = user.email;  // Assuming email is used to link users and payments
+
+            // Delete associated payments
+            await Payment.deleteMany({ email: userEmail });
+
+            // Delete user
+            await User.deleteMany({ email:userEmail }); // Using .remove() on the document to handle middleware if necessary
+
+            console.log(`Deleted user and associated payments for email: ${userEmail}`);
+        }
     } catch (error) {
         console.error('Automatic unsubscription failed:', error);
     }
