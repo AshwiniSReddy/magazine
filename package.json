@@ -14,6 +14,8 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "razorpay": "^2.9.3",
+    "socket-io": "^1.0.0",
+    "socket.io": "^4.7.5",
     "ws": "^8.17.0"
   }
 }

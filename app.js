@@ -17,6 +17,16 @@ const subscriptionScheduler = require('./routes/subscriptionScheduler');
 const refund=require('./routes/refund')
 const check=require('./routes/check')
 const check_payment_status=require('./routes/checkpaymentstatus')
+const http = require('http');
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+    cors: {
+      origin: "http://localhost:3000",
+      methods: ["GET", "POST"],
+      credentials: true
+    }
+  });
+  
 // Session middleware configuration
 
 app.use(bodyParser.json());
@@ -53,11 +63,33 @@ app.use('/api/refund',refund)
 app.use('/api/updatepaymentstatus',check)
 app.use('/api/check_payment_status',check_payment_status)
 
+// Listen for socket connections
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    // Listen for paymentStatus event from the client
+    socket.on('paymentStatus', (data) => {
+        // Broadcast the payment status to all connected clients
+        io.emit('paymentStatus', data);
+    });
+
+    // Handle disconnection
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
+
+
 setInterval(subscriptionScheduler,  60 * 1000); // Check once every 24 hours
 // Start server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
-app.listen(process.env.PORT, async () => {
+// app.listen(process.env.PORT, async () => {
+//     await connectDB();
+//     console.log(`Ther server is up at ${process.env.PORT}`)
+//   })
+
+  server.listen(PORT, async () => {
     await connectDB();
-    console.log(`Ther server is up at ${process.env.PORT}`)
-  })
+    console.log(`The server is up at ${PORT}`);
+});

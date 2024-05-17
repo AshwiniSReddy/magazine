@@ -21,8 +21,7 @@ const checkSubscriptionStatus = async () => {
             // Delete associated payments
             await Payment.deleteMany({ email: userEmail });
 
-            // Delete user
-            await User.deleteMany({ email:userEmail }); // Using .remove() on the document to handle middleware if necessary
+            
 
             console.log(`Deleted user and associated payments for email: ${userEmail}`);
         }

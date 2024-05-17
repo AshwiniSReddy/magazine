@@ -2,14 +2,15 @@ const router = require("express").Router();
 const passport = require("passport");
 const dotenv = require("dotenv");
 const User = require('../modals/user')
-
+const Payment = require('../modals/payment');
 dotenv.config();
 
 router.post('/', async (req, res) => {
     try {
-        const { loginuserid } = req.body;
+        const { loginuserid ,orderDetails} = req.body;
         // Find the user by their ID
         console.log(loginuserid)
+        console.log(orderDetails)
         const user = await User.findOneAndUpdate(
             { email: loginuserid },
             { $set: { isSubscribed: true, startDate: new Date() } },
